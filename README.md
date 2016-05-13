@@ -1,1 +1,2 @@
 # crashWordpressPassword
+# 使用python破解wordpress后台登陆密码
